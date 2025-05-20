@@ -2,8 +2,10 @@ import monkeyData from '../LookupLists/BDT6CamoLeadLookup.json';
 import { useMapContext } from '../Context/MapContext';
 import MonkeyType from '../types/MonkeyType';
 import { useEffect, useMemo, useState } from 'react';
+import { useSettingsContext } from '../Context/SettingsContext';
 
 const MonkeyRandomizer: React.FC = () => {
+    const {settings} = useSettingsContext()
     const globalLeadLookup = ["Alchemist"]
     const globalCamoLookup = ["Wizard", "Mortar", "Ninja", "Sub", "Village", "Engineer", "Ice", "Mermonkey"]
     const {map} = useMapContext();
@@ -84,10 +86,13 @@ const MonkeyRandomizer: React.FC = () => {
     const randomIndicies = getRandomIndices()
     let result: MonkeyType[] = []
     result = randomIndicies.map((i) => monkeyData[i])
-    while(!monkeyCheck(result))
+    if(settings.checkPossible)
     {
-      const randomIndicies = getRandomIndices()
-      result = randomIndicies.map((i) => monkeyData[i])
+      while(!monkeyCheck(result))
+      {
+        const randomIndicies = getRandomIndices()
+        result = randomIndicies.map((i) => monkeyData[i])
+      }
     }
     setSelectedMonkeys(result)
   }
