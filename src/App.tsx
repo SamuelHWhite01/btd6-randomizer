@@ -1,10 +1,10 @@
-import { useState } from 'react'
 import './App.css'
+import MonkeyRandomiser from './components/MonkeyRandomizer'
 
 function App() {
   return (
    <div>
-    placeholder
+    <MonkeyRandomiser/>
    </div>
   )
 }

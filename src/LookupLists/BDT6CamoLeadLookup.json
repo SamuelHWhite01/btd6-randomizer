@@ -1,0 +1,29 @@
+{
+  "Dart": { "camo": [[3, 2]], "lead": [[1, 4]] },
+  "Boomerang": { "camo": [[-1, -1]], "lead": [[3, 2]] },
+  "Bomb": { "camo": [[-1, -1]], "lead": [[0, 0]] },
+  "Tack": { "camo": [[-1, -1]], "lead": [[1, 3]] },
+  "Ice": { "camo": [[1, 2]], "lead": [[1, 2]] },
+  "Glue": { "camo": [[-1, -1]], "lead": [[1, 2]] },
+
+  "Sniper": { "camo": [[2, 1]], "lead": [[1, 1]] },
+  "Sub": { "camo": [[1, 3]], "lead": [[1, 4], [2, 2]] },
+  "Buccaneer": { "camo": [[3, 2]], "lead": [[2, 2]] },
+  "Ace": { "camo": [[2, 2]], "lead": [[2, 1]] },
+  "Heli": { "camo": [[2, 2]], "lead": [[1, 3]] },
+  "Mortar": { "camo": [[3, 3]], "lead": [[0, 0]] },
+  "Dartling": { "camo": [[2, 1]], "lead": [[2, 3]] },
+
+  "Wizard": { "camo": [[3, 2]], "lead": [[2, 1]] },
+  "Super": { "camo": [[3, 2]], "lead": [[1, 2]] },
+  "Ninja": { "camo": [[0, 0]], "lead": [[3, 3]] },
+  "Alchemist": { "camo": [[-1, -1]], "lead": [[0, 0]] },
+  "Druid": { "camo": [[-1, -1]], "lead": [[1, 1]] },
+  "Mermonkey": { "camo": [[3, 1]], "lead": [[-1, -1]] },
+
+  "Banana": { "camo": [[-1, -1]], "lead": [[-1, -1]] },
+  "Spike": { "camo": [[0, 0]], "lead": [[1, 2]] },
+  "Village": { "camo": [[2, 2]], "lead": [[-1, -1]] },
+  "Engineer": { "camo": [[2, 3]], "lead": [[2, 3], [1, 4], [3, 4]] },
+  "Beast": { "camo": [[3, 2]], "lead": [[1, 3], [2, 2]] }
+}
