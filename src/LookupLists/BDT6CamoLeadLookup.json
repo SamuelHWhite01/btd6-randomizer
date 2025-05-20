@@ -6,8 +6,6 @@
   { "name": "Ice", "camo": [[1, 2]], "lead": [[1, 2]] },
   { "name": "Glue", "camo": [[-1, -1]], "lead": [[1, 2]] },
   { "name": "Sniper", "camo": [[2, 1]], "lead": [[1, 1]] },
-  { "name": "Sub", "camo": [[1, 3]], "lead": [[1, 4], [2, 2]] },
-  { "name": "Buccaneer", "camo": [[3, 2]], "lead": [[2, 2]] },
   { "name": "Ace", "camo": [[2, 2]], "lead": [[2, 1]] },
   { "name": "Heli", "camo": [[2, 2]], "lead": [[1, 3]] },
   { "name": "Mortar", "camo": [[3, 3]], "lead": [[0, 0]] },
@@ -22,5 +20,7 @@
   { "name": "Spike", "camo": [[0, 0]], "lead": [[1, 2]] },
   { "name": "Village", "camo": [[2, 2]], "lead": [[-1, -1]] },
   { "name": "Engineer", "camo": [[2, 3]], "lead": [[2, 3], [1, 4], [3, 4]] },
-  { "name": "Beast", "camo": [[3, 2]], "lead": [[1, 3], [2, 2]] }
+  { "name": "Beast", "camo": [[3, 2]], "lead": [[1, 3], [2, 2]] },
+  { "name": "Sub", "camo": [[1, 3]], "lead": [[1, 4], [2, 2]] },
+  { "name": "Buccaneer", "camo": [[3, 2]], "lead": [[2, 2]] }
 ]

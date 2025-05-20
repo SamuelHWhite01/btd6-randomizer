@@ -17,7 +17,7 @@ const MapRandomizer: React.FC = () => {
     {
         const selectedIdx = Math.floor(Math.random()*numMaps);
         setMap(mapData[selectedIdx]);
-        console.log(selectedIdx)
+        //console.log(selectedIdx)
     }
     return (
     <div className=' flex  m-2 flex-col items-center'>
