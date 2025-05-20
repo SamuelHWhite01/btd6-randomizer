@@ -100,7 +100,7 @@ const MonkeyRandomizer: React.FC = () => {
       >
         ←
       </button>
-      <span className="text-xl font-bold">Monkeys: {numRandom}</span>
+      <span className="font-bold text-[5vh]">Monkeys: {numRandom}</span>
       <button
         onClick={() => handleAdjust(1)}
         className="randomize-button"
