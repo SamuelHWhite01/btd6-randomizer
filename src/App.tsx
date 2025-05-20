@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="p-4">
       <MapProvider>
-        <div className="flex flex-wrap justify-center gap-8 items-start">
+        <div className="flex flex-wrap justify-center gap-8">
           <MapRandomizer />
           <HeroRandomizer />
         </div>
