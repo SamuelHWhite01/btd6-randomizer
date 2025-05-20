@@ -1,44 +1,135 @@
+import monkeyData from '../LookupLists/BDT6CamoLeadLookup.json';
+import { useMapContext } from '../Context/MapContext';
+import MonkeyType from '../types/MonkeyType';
 import { useEffect, useState } from 'react';
-import lookupData from './BTD6CamoLeadLookup.json';
 
-type Entry = {
-  camo: number[][];
-  lead: number[][];
-};
-
-const MonkeyRandomiser: React.FC = () => {
-  const [selected, setSelected] = useState<[string, Entry][] | null>(null);
+const MonkeyRandomizer: React.FC = () => {
+  const {map} = useMapContext();
+  const [selectedMonkeys, setSelectedMonkeys] = useState<MonkeyType[]>([])
+  const [crossPaths, setCrossPaths] = useState<number[][]>([])
+  const [numRandom, setNumRandom] = useState(3);
+  const images = import.meta.glob('../assets/Monkey_Images/*.png', { eager: true, as: 'url' });
+  const numMonkeys:number = monkeyData.length
+  function getRandomIndices(): number[] {
+    const indices = Array.from({ length: numMonkeys }, (_, i) => i);
+    for (let i = indices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indices[i], indices[j]] = [indices[j], indices[i]]; // Shuffle
+    }
+    return indices.slice(0, numRandom);
+  }
 
   useEffect(() => {
-    // Get all entries as [key, value]
-    const entries = Object.entries(lookupData) as [string, Entry][];
+    handleRandomize()
+    }, [numRandom]);
     
-    // Shuffle function
-    function shuffle<T>(array: T[]): T[] {
-      return array
-        .map(value => ({ value, sort: Math.random() }))
-        .sort((a, b) => a.sort - b.sort)
-        .map(({ value }) => value);
+  const monkeyCheck = (arr:MonkeyType[]) =>
+  {
+    let leadCheck = false
+    let camoCheck = false
+    let camoLeadCheck = false
+    for (let i = 0; i<arr.length; i++)
+    {
+
+      if((arr[i].name === "Buccaneer" || arr[i].name === "Sub") && !map.hasWater)
+      {
+        console.log("no water");
+        return false;
+      }
+
+      let localCamo = false
+      let localLead = false
+      if (arr[i].lead[0][0] > -1) // will be -1 if its never true
+      {
+        leadCheck = true
+        localLead = true
+      }
+      if (arr[i].camo[0][0] > -1) // will be -1 if its never true
+      {
+        camoCheck = true
+        localCamo = true
+      }
+      // in the case that both lead and camo are true, then loop over the possibilites to see if theyre compatible
+      if(localLead && localCamo)
+      {
+        for(let j = 0; j<arr[i].lead.length; j++)
+        {
+          if (arr[i].lead[j][1] < 3)
+          {
+            camoLeadCheck = true
+          }
+        }
+        for(let j = 0; j<arr[i].camo.length; j++)
+        {
+          if (arr[i].lead[j][1] < 3)
+          {
+            camoLeadCheck = true
+          }
+        }
+      }
     }
-
-    // Shuffle and take first 2
-    const randomTwo = shuffle(entries).slice(0, 2);
-    setSelected(randomTwo);
-  }, []);
-
-  if (!selected) return <div>Loading...</div>;
-
+    if(camoCheck && leadCheck && camoLeadCheck)
+    {
+      return true
+    }
+    console.log("reshuffling")
+    return false;
+  }
+  const handleRandomize = () =>
+  {
+    const randomIndicies = getRandomIndices()
+    let result: MonkeyType[] = []
+    result = randomIndicies.map((i) => monkeyData[i])
+    while(!monkeyCheck(result))
+    {
+      const randomIndicies = getRandomIndices()
+      result = randomIndicies.map((i) => monkeyData[i])
+    }
+    setSelectedMonkeys(result)
+  }
+  const handleAdjust = (add:number) =>
+  {
+    setNumRandom(numRandom + add);
+  }
   return (
     <div>
-      <h2>Randomly Selected Entries</h2>
-      {selected.map(([key, entry]) => (
-        <div key={key} style={{ marginBottom: 20 }}>
-          <h3>{key}</h3>
-          <div><strong>Camo:</strong> {JSON.stringify(entry.camo)}</div>
-          <div><strong>Lead:</strong> {JSON.stringify(entry.lead)}</div>
-        </div>
-      ))}
+
+    <div className="flex items-center justify-center mb-4 space-x-4">
+      <button
+        onClick={() => handleAdjust(-1)}
+        className="text-2xl px-4 py-2 bg-green-600 rounded"
+      >
+        ←
+      </button>
+      <span className="text-xl font-bold">Monkeys: {numRandom}</span>
+      <button
+        onClick={() => handleAdjust(1)}
+        className="text-2xl px-4 py-2 bg-green-600 rounded"
+      >
+        →
+      </button>
     </div>
+      <button  className = {`randomize-button`}onClick={handleRandomize}> Randomize Monkeys</button>
+      {selectedMonkeys.length > 0 && (
+          <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {selectedMonkeys.map((monkey) => {
+            const monkeyImageUrl = images[`../assets/Monkey_Images/${monkey.name}.png`];
+
+            return (
+              <div key={monkey.name} className="text-center">
+                <img
+                  src={monkeyImageUrl}
+                  alt={monkey.name}
+                  className="w-[10vw] h-auto mx-auto rounded"
+                />
+                <p className="font-bold text-[5vh]">{monkey.name}</p>
+              </div>
+            );
+          })}
+        </div>
+      )}
+  </div>
+  
   );
 }
-export default MonkeyRandomiser;
+export default MonkeyRandomizer;

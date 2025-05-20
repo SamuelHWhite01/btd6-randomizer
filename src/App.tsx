@@ -1,12 +1,23 @@
 import './App.css'
-import MonkeyRandomiser from './components/MonkeyRandomizer'
+import HeroRandomizer from './components/HeroRandomizer'
+import MapRandomizer from './components/MapRandomizer'
+import MonkeyRandomizer from './components/MonkeyRandomizer'
+import { MapProvider } from './Context/MapProvider'
 
 function App() {
   return (
-   <div>
-    <MonkeyRandomiser/>
-   </div>
-  )
+    <div className="p-4">
+      <MapProvider>
+        <div className="flex flex-wrap justify-center gap-8 items-start">
+          <MapRandomizer />
+          <HeroRandomizer />
+        </div>
+        <div className="mt-8">
+          <MonkeyRandomizer />
+        </div>
+      </MapProvider>
+    </div>
+  );
 }
 
 export default App
