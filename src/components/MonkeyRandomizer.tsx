@@ -96,14 +96,14 @@ const MonkeyRandomizer: React.FC = () => {
     <div className="flex items-center justify-center mb-4 space-x-4">
       <button
         onClick={() => handleAdjust(-1)}
-        className="text-white  px-4 py-2 font-bold text-[3vh] bg-green-600 rounded border-2 border-black"
+        className="randomize-button"
       >
         ←
       </button>
       <span className="text-xl font-bold">Monkeys: {numRandom}</span>
       <button
         onClick={() => handleAdjust(1)}
-        className="text-white  px-4 py-2 font-bold text-[3vh] bg-green-600 rounded border-2 border-black"
+        className="randomize-button"
       >
         →
       </button>
