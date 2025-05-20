@@ -1,14 +1,17 @@
 import monkeyData from '../LookupLists/BDT6CamoLeadLookup.json';
 import { useMapContext } from '../Context/MapContext';
 import MonkeyType from '../types/MonkeyType';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const MonkeyRandomizer: React.FC = () => {
   const {map} = useMapContext();
   const [selectedMonkeys, setSelectedMonkeys] = useState<MonkeyType[]>([])
   const [numRandom, setNumRandom] = useState(3);
   const images = import.meta.glob('../assets/Monkey_Images/*.webp', { eager: true, as: 'url' });
-  const numMonkeys:number = monkeyData.length
+  const numMonkeys = useMemo(() => {
+  return map.hasWater ? monkeyData.length  : monkeyData.length-2;
+}, [map]);
+  const maxNumRandom = 7; // sets the maximum number of monkeys to randomize
   function getRandomIndices(): number[] {
     const indices = Array.from({ length: numMonkeys }, (_, i) => i);
     for (let i = indices.length - 1; i > 0; i--) {
@@ -29,12 +32,6 @@ const MonkeyRandomizer: React.FC = () => {
     let camoLeadCheck = false
     for (let i = 0; i<arr.length; i++)
     {
-
-      if((arr[i].name === "Buccaneer" || arr[i].name === "Sub") && !map.hasWater)
-      {
-        //console.log("no water");
-        return false;
-      }
 
       let localCamo = false
       let localLead = false
@@ -87,7 +84,11 @@ const MonkeyRandomizer: React.FC = () => {
   }
   const handleAdjust = (add:number) =>
   {
-    setNumRandom(numRandom + add);
+    let newNum = numRandom+add;
+    if(0 < newNum && newNum < maxNumRandom)
+    {
+            setNumRandom(numRandom + add);
+    }
   }
   return (
     <div>
