@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import CheckToggle from './CheckToggle';
+import PlayerSelect from './PlayerSelect';
 
 
 const CollapsibleMenu: React.FC = () => {
@@ -24,6 +25,7 @@ const CollapsibleMenu: React.FC = () => {
                     <ul className="list-none p-0">
                         <li className="my-4">
                             <CheckToggle/>
+                            <PlayerSelect/>
                         </li>
                     </ul>
                 </nav>

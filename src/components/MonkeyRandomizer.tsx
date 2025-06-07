@@ -9,8 +9,9 @@ const MonkeyRandomizer: React.FC = () => {
     const globalLeadLookup = ["Alchemist"]
     const globalCamoLookup = ["Wizard", "Mortar", "Ninja", "Sub", "Village", "Engineer", "Ice", "Mermonkey"]
     const {map} = useMapContext();
-    const [selectedMonkeys, setSelectedMonkeys] = useState<MonkeyType[]>([])
-    const [numRandom, setNumRandom] = useState(3);
+    const [selectedMonkeys, setSelectedMonkeys] = useState<MonkeyType[][]>([])
+    const [numRandomPlayer, setNumRandomPlayer] = useState(3);
+    const numRandom = useMemo(() => numRandomPlayer * settings.numPlayers,[numRandomPlayer, settings.numPlayers])
     const images = import.meta.glob('../assets/Monkey_Images/*.webp', { eager: true, as: 'url' });
     const numMonkeys = useMemo(() => {
     return map.hasWater ? monkeyData.length  : monkeyData.length-2;
@@ -27,7 +28,7 @@ const MonkeyRandomizer: React.FC = () => {
 
   useEffect(() => {
     handleRandomize()
-    }, [numRandom]);
+    }, [numRandomPlayer, settings.numPlayers]);
     
   const monkeyCheck = (arr:MonkeyType[]) =>
   {
@@ -84,24 +85,28 @@ const MonkeyRandomizer: React.FC = () => {
   const handleRandomize = () =>
   {
     const randomIndicies = getRandomIndices()
-    let result: MonkeyType[] = []
-    result = randomIndicies.map((i) => monkeyData[i])
+    let resultFlat: MonkeyType[] = []
+    resultFlat = randomIndicies.map((i) => monkeyData[i])
     if(settings.checkPossible)
     {
-      while(!monkeyCheck(result))
+      while(!monkeyCheck(resultFlat))
       {
         const randomIndicies = getRandomIndices()
-        result = randomIndicies.map((i) => monkeyData[i])
+        resultFlat = randomIndicies.map((i) => monkeyData[i])
       }
+    }
+    const result: MonkeyType[][] = [];
+    for (let i = 0; i < settings.numPlayers; i++) {
+      result.push(resultFlat.slice(i * numRandomPlayer, (i + 1) * numRandomPlayer));
     }
     setSelectedMonkeys(result)
   }
   const handleAdjust = (add:number) =>
   {
-    let newNum = numRandom+add;
+    let newNum = numRandomPlayer+add;
     if(0 < newNum && newNum < maxNumRandom)
     {
-            setNumRandom(numRandom + add);
+            setNumRandomPlayer(numRandomPlayer + add);
     }
   }
   return (
@@ -114,7 +119,7 @@ const MonkeyRandomizer: React.FC = () => {
       >
         ←
       </button>
-      <span className="font-bold text-[5vh]">Monkeys: {numRandom}</span>
+      <span className="font-bold text-[5vh]">Monkeys: {numRandomPlayer}</span>
       <button
         onClick={() => handleAdjust(1)}
         className="randomize-button"
@@ -123,11 +128,14 @@ const MonkeyRandomizer: React.FC = () => {
       </button>
     </div>
       <button  className = {`randomize-button`}onClick={handleRandomize}> Randomize Monkeys</button>
-      {selectedMonkeys.length > 0 && (
-          <div className="flex flex-row gap-10 justify-center m-2">
-          {selectedMonkeys.map((monkey) => {
+    {selectedMonkeys.length > 0 && (
+  <div className="flex flex-col gap-10 justify-center m-2">
+    {selectedMonkeys.map((playerMonkeys, playerIndex) => (
+      <div key={playerIndex} className="flex flex-col items-center gap-2">
+        <h2 className="font-bold text-[2.5vh] text-center">Player {playerIndex + 1}</h2>
+        <div className="flex flex-row gap-4 justify-center">
+          {playerMonkeys.map((monkey) => {
             const monkeyImageUrl = images[`../assets/Monkey_Images/${monkey.name}.webp`];
-
             return (
               <div key={monkey.name} className="text-center">
                 <img
@@ -135,12 +143,16 @@ const MonkeyRandomizer: React.FC = () => {
                   alt={monkey.name}
                   className="h-[20vh] w-auto mx-auto rounded"
                 />
-                <p className="font-bold text-[5vh]">{monkey.name}</p>
+                <p className="font-bold text-[2.5vh]">{monkey.name}</p>
               </div>
             );
           })}
         </div>
-      )}
+      </div>
+    ))}
+  </div>
+)}
+
   </div>
   
   );
