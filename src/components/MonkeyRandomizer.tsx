@@ -64,12 +64,12 @@ const MonkeyRandomizer: React.FC = () => {
         let localLead = false
         if(globalCamoLookup.includes(arr[i].name))
         {
-            console.log(arr[i].name,"provides global camo")
+            //console.log(arr[i].name,"provides global camo")
             globalCamo = true;
         }
         if(globalLeadLookup.includes(arr[i].name))
         {
-            console.log(arr[i].name,"provides global lead")
+            //console.log(arr[i].name,"provides global lead")
             globalLead = true;
         }
         if (arr[i].lead[0][0] > -1) // will be -1 if its never true
@@ -105,28 +105,56 @@ const MonkeyRandomizer: React.FC = () => {
     }
     return false;
   }
+  const randomCrossPath = (arr:MonkeyType[][]) =>
+  {
+    let result = arr
+    for(let i = 0; i<result.length; i++)// for each player
+    {
+      for(let j =0;j<result[0].length;j++) // for each monkey
+      {
+        for(let k=0;k<3;k++) // for each crosspath
+        {
+          arr[i][j].paths[k] = (Math.floor(Math.random()*5)+1)
+        }
+      }
+    }
+    return result
+  }
   const handleRandomize = () =>
   {
     const randomIndicies = getRandomIndices(numMonkeys, numRandom)
     let randomHeroes = getRandomIndices(heroImageEntries.length, settings.numPlayers)
     let resultFlat: MonkeyType[] = []
-    resultFlat = randomIndicies.map((i) => monkeyData[i])
+    resultFlat = randomIndicies.map((i) => {
+      return ({
+        lead:monkeyData[i].lead,
+        camo:monkeyData[i].camo,
+        name:monkeyData[i].name,
+        paths:[],
+      })})
     if(settings.checkPossible)
     {
       while(!monkeyCheck(resultFlat))
       {
         const randomIndicies = getRandomIndices(numMonkeys, numRandom)
-        resultFlat = randomIndicies.map((i) => monkeyData[i])
+        resultFlat = randomIndicies.map((i) => {
+      return ({
+        lead:monkeyData[i].lead,
+        camo:monkeyData[i].camo,
+        name:monkeyData[i].name,
+        paths:[]
+      })})
       }
     }
     while(!heroCheck(randomHeroes))
     {
       randomHeroes = getRandomIndices(heroImageEntries.length, settings.numPlayers)
     }
-    const result: MonkeyType[][] = [];
+    let result: MonkeyType[][] = [];
     for (let i = 0; i < settings.numPlayers; i++) {
       result.push(resultFlat.slice(i * numRandomPlayer, (i + 1) * numRandomPlayer));
     }
+    result = randomCrossPath(result)
     setSelectedMonkeys(result)
     setSelectedHeroes(randomHeroes)
   }
@@ -195,6 +223,8 @@ const MonkeyRandomizer: React.FC = () => {
                   className="h-[20vh] w-auto mx-auto rounded"
                 />
                 <p className="font-bold text-[2.5vh]">{monkey.name}</p>
+                {settings.generateCrosspath &&
+                <p className="font-bold text-[2.5vh]">{monkey.paths[0]} - {monkey.paths[1]} - {monkey.paths[2]}</p>}
               </div>
             );
           })}
