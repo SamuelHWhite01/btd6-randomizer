@@ -11,25 +11,48 @@ const MonkeyRandomizer: React.FC = () => {
     const {map} = useMapContext();
     const [selectedMonkeys, setSelectedMonkeys] = useState<MonkeyType[][]>([])
     const [numRandomPlayer, setNumRandomPlayer] = useState(3);
+    const [selectedHeroes, setSelectedHeroes] = useState<number[]>([]); // track index of selected hero form images
     const numRandom = useMemo(() => numRandomPlayer * settings.numPlayers,[numRandomPlayer, settings.numPlayers])
     const images = import.meta.glob('../assets/Monkey_Images/*.webp', { eager: true, as: 'url' });
     const numMonkeys = useMemo(() => {
     return map.hasWater ? monkeyData.length  : monkeyData.length-2;
     }, [map]);
-    const maxNumRandom = 7; // sets the maximum number of monkeys to randomize
-    function getRandomIndices(): number[] {
-        const indices = Array.from({ length: numMonkeys }, (_, i) => i);
+    const maxNumRandom = 5; // sets the maximum number of monkeys to randomize
+
+
+      const heroImages = import.meta.glob('../assets/Hero_Images/*.webp', {
+    eager: true,
+    as: 'url',
+  }) as Record<string, string>;
+  const heroImageEntries = Object.entries(heroImages);
+    function getRandomIndices(max:number, numSelected:number): number[] {
+        const indices = Array.from({ length: max }, (_, i) => i);
         for (let i = indices.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [indices[i], indices[j]] = [indices[j], indices[i]]; // Shuffle
         }
-        return indices.slice(0, numRandom);
+        return indices.slice(0, numSelected);
     }
 
   useEffect(() => {
     handleRandomize()
     }, [numRandomPlayer, settings.numPlayers]);
     
+  const heroCheck = (arr:number[]) =>
+  {
+    if(map.hasWater) // if the map has water then any hero is fine
+    {
+      return true
+    }
+    for(let i = 0; i<arr.length; i++) // if the map does not have water
+    {
+      if(arr[i] === 0) // if one of the heroes is brickel
+      {
+        return false; // not fine
+      }
+    }
+    return true;
+  }
   const monkeyCheck = (arr:MonkeyType[]) =>
   {
     let camoLeadCheck = false
@@ -84,27 +107,33 @@ const MonkeyRandomizer: React.FC = () => {
   }
   const handleRandomize = () =>
   {
-    const randomIndicies = getRandomIndices()
+    const randomIndicies = getRandomIndices(numMonkeys, numRandom)
+    let randomHeroes = getRandomIndices(heroImageEntries.length, settings.numPlayers)
     let resultFlat: MonkeyType[] = []
     resultFlat = randomIndicies.map((i) => monkeyData[i])
     if(settings.checkPossible)
     {
       while(!monkeyCheck(resultFlat))
       {
-        const randomIndicies = getRandomIndices()
+        const randomIndicies = getRandomIndices(numMonkeys, numRandom)
         resultFlat = randomIndicies.map((i) => monkeyData[i])
       }
+    }
+    while(!heroCheck(randomHeroes))
+    {
+      randomHeroes = getRandomIndices(heroImageEntries.length, settings.numPlayers)
     }
     const result: MonkeyType[][] = [];
     for (let i = 0; i < settings.numPlayers; i++) {
       result.push(resultFlat.slice(i * numRandomPlayer, (i + 1) * numRandomPlayer));
     }
     setSelectedMonkeys(result)
+    setSelectedHeroes(randomHeroes)
   }
   const handleAdjust = (add:number) =>
   {
     let newNum = numRandomPlayer+add;
-    if(0 < newNum && newNum < maxNumRandom)
+    if(0 < newNum && newNum <= maxNumRandom)
     {
             setNumRandomPlayer(numRandomPlayer + add);
     }
@@ -130,14 +159,36 @@ const MonkeyRandomizer: React.FC = () => {
       <button  className = {`randomize-button`}onClick={handleRandomize}> Randomize Monkeys</button>
     {selectedMonkeys.length > 0 && (
   <div className="flex flex-col gap-10 justify-center m-2">
-    {selectedMonkeys.map((playerMonkeys, playerIndex) => (
+    {selectedMonkeys.map((playerMonkeys, playerIndex) => {
+
+    const rawName = heroImageEntries[selectedHeroes[playerIndex]][0].split('/').pop() || '';
+    const cleanedName = rawName
+    .replace(/[_-]?portrait\.webp$/i, '') // Remove "_portrait.webp" or "-portrait.webp" or "portrait.webp"
+    .replace(/_/g, ' ')                  // Optional: replace underscores with spaces
+    .trim();
+    const heroUrl = heroImageEntries[selectedHeroes[playerIndex]][1]
+      return (
       <div key={playerIndex} className="flex flex-col items-center gap-2">
         <h2 className="font-bold text-[2.5vh] text-center">Player {playerIndex + 1}</h2>
         <div className="flex flex-row gap-4 justify-center">
+        {settings.randomHero && (
+          <div key={cleanedName} className="text-center w-[20vh]">
+                <img
+                  src={heroUrl}
+                  alt={cleanedName}
+                  className="h-[20vh] w-auto mx-auto rounded"
+                />
+                <p className="font-bold text-[2.5vh]">{cleanedName}</p>
+          </div>
+        
+    )}
+        
+
+          
           {playerMonkeys.map((monkey) => {
             const monkeyImageUrl = images[`../assets/Monkey_Images/${monkey.name}.webp`];
             return (
-              <div key={monkey.name} className="text-center">
+              <div key={monkey.name} className="text-center w-[20vh]">
                 <img
                   src={monkeyImageUrl}
                   alt={monkey.name}
@@ -149,7 +200,7 @@ const MonkeyRandomizer: React.FC = () => {
           })}
         </div>
       </div>
-    ))}
+)})}
   </div>
 )}
 

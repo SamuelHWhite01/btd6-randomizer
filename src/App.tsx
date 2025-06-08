@@ -1,5 +1,4 @@
 import './App.css'
-import HeroRandomizer from './components/HeroRandomizer'
 import MapRandomizer from './components/MapRandomizer'
 import MonkeyRandomizer from './components/MonkeyRandomizer'
 import { MapProvider } from './Context/MapProvider'
@@ -14,7 +13,6 @@ function App() {
           <CollapsibleMenu/>
         <div className="flex flex-wrap justify-center gap-8">
           <MapRandomizer />
-          <HeroRandomizer />
         </div>
         <div className="mt-8">
           <MonkeyRandomizer />

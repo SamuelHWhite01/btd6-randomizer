@@ -2,26 +2,26 @@ import { useSettingsContext } from "../Context/SettingsContext";
 
 
 
-const CheckToggle = () => {
+const HeroToggle = () => {
 const {settings, setSettings} = useSettingsContext()
 const handleChange = () => {
     setSettings({
     ...settings,
-    checkPossible: !settings.checkPossible
+    randomHero: !settings.randomHero
   });
 };
   return (
         <div> 
-            <h1 className= " font-bold text-[2vh]">Check to make sure its possible?</h1>
+            <h1 className= " font-bold text-[2vh]">Random Hero?</h1>
         <input
         type="checkbox"
-        name="CheckCammoLead"
+        name="randomHero"
         className="h-[3vh] w-[3vh] accent-[rgb(20,128,223)] mr-2 cursor-pointer"
-        checked={settings.checkPossible}
+        checked={settings.randomHero}
         onChange={handleChange}
         />
         </div>
   );
 };
 
-export default CheckToggle;
+export default HeroToggle;
