@@ -5,14 +5,13 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSettingsContext } from '../Context/SettingsContext';
 
 const MonkeyRandomizer: React.FC = () => {
-    const {settings} = useSettingsContext()
+    const {settings, setSettings} = useSettingsContext()
     const globalLeadLookup = ["Alchemist"]
     const globalCamoLookup = ["Wizard", "Mortar", "Ninja", "Sub", "Village", "Engineer", "Ice", "Mermonkey"]
     const {map} = useMapContext();
     const [selectedMonkeys, setSelectedMonkeys] = useState<MonkeyType[][]>([])
-    const [numRandomPlayer, setNumRandomPlayer] = useState(3);
     const [selectedHeroes, setSelectedHeroes] = useState<number[]>([]); // track index of selected hero form images
-    const numRandom = useMemo(() => numRandomPlayer * settings.numPlayers,[numRandomPlayer, settings.numPlayers])
+    const numRandom = useMemo(() => settings.numMonkeys * settings.numPlayers,[settings.numMonkeys, settings.numPlayers])
     const images = import.meta.glob('../assets/Monkey_Images/*.webp', { eager: true, as: 'url' });
     const numMonkeys = useMemo(() => {
     return map.hasWater ? monkeyData.length  : monkeyData.length-2;
@@ -36,7 +35,7 @@ const MonkeyRandomizer: React.FC = () => {
 
   useEffect(() => {
     handleRandomize()
-    }, [numRandomPlayer, settings.numPlayers]);
+    }, [settings.numMonkeys, settings.numPlayers, settings.tierNumber]);
     
   const heroCheck = (arr:number[]) =>
   {
@@ -110,12 +109,18 @@ const MonkeyRandomizer: React.FC = () => {
     let result = arr
     for(let i = 0; i<result.length; i++)// for each player
     {
-      for(let j =0;j<result[0].length;j++) // for each monkey
+      let numTiers = 0
+      while(numTiers < settings.tierNumber) // keep looping until all the tiers are used up
       {
-        for(let k=0;k<3;k++) // for each crosspath
+        let j = Math.floor(Math.random()*settings.numMonkeys)
+        let k = Math.floor(Math.random()*3)
+        if(arr[i][j].paths[k] <5) // if its not maxed out
         {
-          arr[i][j].paths[k] = (Math.floor(Math.random()*5)+1)
+          numTiers += 1
+          arr[i][j].paths[k] += 1
         }
+          
+        
       }
     }
     return result
@@ -130,7 +135,7 @@ const MonkeyRandomizer: React.FC = () => {
         lead:monkeyData[i].lead,
         camo:monkeyData[i].camo,
         name:monkeyData[i].name,
-        paths:[],
+        paths:[0,0,0],
       })})
     if(settings.checkPossible)
     {
@@ -142,7 +147,7 @@ const MonkeyRandomizer: React.FC = () => {
         lead:monkeyData[i].lead,
         camo:monkeyData[i].camo,
         name:monkeyData[i].name,
-        paths:[]
+        paths:[0,0,0]
       })})
       }
     }
@@ -152,7 +157,7 @@ const MonkeyRandomizer: React.FC = () => {
     }
     let result: MonkeyType[][] = [];
     for (let i = 0; i < settings.numPlayers; i++) {
-      result.push(resultFlat.slice(i * numRandomPlayer, (i + 1) * numRandomPlayer));
+      result.push(resultFlat.slice(i * settings.numMonkeys, (i + 1) * settings.numMonkeys));
     }
     result = randomCrossPath(result)
     setSelectedMonkeys(result)
@@ -160,10 +165,14 @@ const MonkeyRandomizer: React.FC = () => {
   }
   const handleAdjust = (add:number) =>
   {
-    let newNum = numRandomPlayer+add;
+    let newNum = settings.numMonkeys+add;
     if(0 < newNum && newNum <= maxNumRandom)
     {
-            setNumRandomPlayer(numRandomPlayer + add);
+        setSettings({
+          ...settings,
+          numMonkeys: newNum
+        }
+        );
     }
   }
   return (
@@ -176,7 +185,7 @@ const MonkeyRandomizer: React.FC = () => {
       >
         ←
       </button>
-      <span className="font-bold text-[5vh]">Monkeys: {numRandomPlayer}</span>
+      <span className="font-bold text-[5vh]">Monkeys: {settings.numMonkeys}</span>
       <button
         onClick={() => handleAdjust(1)}
         className="randomize-button"
@@ -224,7 +233,7 @@ const MonkeyRandomizer: React.FC = () => {
                 />
                 <p className="font-bold text-[2.5vh]">{monkey.name}</p>
                 {settings.generateCrosspath &&
-                <p className="font-bold text-[2.5vh]">{monkey.paths[0]} - {monkey.paths[1]} - {monkey.paths[2]}</p>}
+                <p className="font-bold text-[2.5vh]">{monkey.paths[0]} {monkey.paths[1]} {monkey.paths[2]}</p>}
               </div>
             );
           })}

@@ -26,8 +26,9 @@ const PlayerSelect = () => {
   };
 
   return (
-    <div className="flex items-center space-x-2">
-      <label className="font-bold text-[2vh]">Number of Players:</label>
+    <div className="flex flex-col items-center space-x-2">
+      <h1 className="font-bold text-[2vh]">Number of Players:</h1>
+      <div>
       <button
         onClick={decrement}
         className="px-2 text-white bg-blue-500 rounded hover:bg-blue-600"
@@ -48,6 +49,7 @@ const PlayerSelect = () => {
       >
         +
       </button>
+      </div>
     </div>
   );
 };
