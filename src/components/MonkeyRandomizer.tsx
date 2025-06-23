@@ -168,9 +168,11 @@ const MonkeyRandomizer: React.FC = () => {
     let newNum = settings.numMonkeys+add;
     if(0 < newNum && newNum <= maxNumRandom)
     {
+        const newTierNum = Math.min(settings.tierNumber, 15*newNum)
         setSettings({
           ...settings,
-          numMonkeys: newNum
+          numMonkeys: newNum,
+          tierNumber:newTierNum,
         }
         );
     }

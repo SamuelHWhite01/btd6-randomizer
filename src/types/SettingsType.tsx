@@ -1,5 +1,4 @@
-import monkeyData from '../LookupLists/BDT6CamoLeadLookup.json';
-class SettingsType{
+type SettingsType = {
     checkPossible:boolean;
     numPlayers:number;
     randomHero:boolean;
