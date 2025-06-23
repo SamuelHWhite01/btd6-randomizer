@@ -110,7 +110,7 @@ const MonkeyRandomizer: React.FC = () => {
     <div className="flex items-center justify-center mb-4 space-x-4">
       <button
         onClick={() => handleAdjust(-1)}
-        className="randomize-button"
+        className="randomize-button "
       >
         ←
       </button>
