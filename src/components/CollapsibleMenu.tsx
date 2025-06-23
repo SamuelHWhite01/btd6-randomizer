@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import CheckToggle from './CheckToggle';
+import PlayerSelect from './PlayerSelect';
+import HeroToggle from './HeroToggle';
+import CrosspathToggle from './CrosspathToggle';
+import { useSettingsContext } from '../Context/SettingsContext';
+import TierSelect from './TierSelect';
 
 
 const CollapsibleMenu: React.FC = () => {
+    const {settings} = useSettingsContext();
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleMenu = () => {
@@ -24,6 +30,10 @@ const CollapsibleMenu: React.FC = () => {
                     <ul className="list-none p-0">
                         <li className="my-4">
                             <CheckToggle/>
+                            <CrosspathToggle/>
+                            <HeroToggle/>
+                            <PlayerSelect/>
+                            {settings.generateCrosspath && <TierSelect/>}
                         </li>
                     </ul>
                 </nav>
