@@ -7,7 +7,8 @@ const {settings, setSettings} = useSettingsContext()
 const handleChange = () => {
     setSettings({
     ...settings,
-    checkPossible: !settings.checkPossible
+    checkPossible: !settings.checkPossible,
+    generateCrosspath:false
   });
 };
   return (

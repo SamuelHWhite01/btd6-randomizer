@@ -16,7 +16,7 @@ const handleChange = () => {
         <input
         type="checkbox"
         name="randomHero"
-        className="h-[3vh] w-[3vh] accent-[rgb(20,128,223)] mr-2 cursor-pointer"
+        className="h-[3vh] w-[3vh] accent-green-600 mr-2 cursor-pointer"
         checked={settings.randomHero}
         onChange={handleChange}
         />

@@ -1,5 +1,6 @@
 [
   { "name": "Dart", "camo": [[3, 2]], "lead": [[1, 4]] },
+  { "name": "Desperado", "camo":[[2,1]], "lead":[[2,3]]},
   { "name": "Boomerang", "camo": [[-1, -1]], "lead": [[3, 2]] },
   { "name": "Bomb", "camo": [[-1, -1]], "lead": [[0, 0]] },
   { "name": "Tack", "camo": [[-1, -1]], "lead": [[1, 3]] },

@@ -8,6 +8,7 @@ const handleChange = () => {
     setSettings({
     ...settings,
     generateCrosspath: !settings.generateCrosspath,
+    checkPossible: false
   });
 };
   return (
@@ -16,7 +17,7 @@ const handleChange = () => {
         <input
         type="checkbox"
         name="CheckCammoLead"
-        className="h-[3vh] w-[3vh] accent-[rgb(20,128,223)] mr-2 cursor-pointer"
+        className="h-[3vh] w-[3vh] accent-green-600 mr-2 cursor-pointer"
         checked={settings.generateCrosspath}
         onChange={handleChange}
         />

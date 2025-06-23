@@ -31,7 +31,7 @@ const PlayerSelect = () => {
       <div>
       <button
         onClick={decrement}
-        className="px-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+        className="px-2 text-white bg-green-600 rounded hover:bg-green-700"
       >
         -
       </button>
@@ -45,7 +45,7 @@ const PlayerSelect = () => {
       />
       <button
         onClick={increment}
-        className="px-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+        className="px-2 text-white bg-green-600 rounded hover:bg-green-700"
       >
         +
       </button>
